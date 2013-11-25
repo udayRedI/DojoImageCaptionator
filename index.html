@@ -5,15 +5,24 @@
 	<link rel="stylesheet" href="../_static/js/dojo/../dijit/themes/claro/claro.css">
 	
         <style type="text/css">
+            imageCaptionator{
+                position:absolute;
+            }
             .caption{
                 position:absolute;
-                top:0px;
+                /*top:0px;*/
                 left:0px;
+                background:black;
+                width:100%;
+                text-align:center;
+                color: white;
+                display:none;
+                opacity:0.7;
             }
         </style>
 </head>
 <body class="claro">
-    <imageCaprionator style="position:absolute;left:100px;" src="anushka.jpg" data-dojo-type="Counter"></imageCaprionator>
+    <div src="anushka.jpg" height="650px" width="450px" caption-position="Bottom" data-dojo-type="imageCaptionator"></div>
 </body>
 	<script src='https://dojotoolkit.org/reference-guide/1.9/_static/js/dojo/dojo.js'></script>
 	<script src='widget.js'></script>
