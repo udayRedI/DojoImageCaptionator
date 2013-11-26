@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html >
+<head>
+	<link rel="stylesheet" href="claro.css">
+	<style type="text/css">
+            .imageCaptionator {
+                position:relative;
+                display:block;
+                overflow:hidden;
+            }
+            .caption{
+                position:absolute;
+                width:100%;
+                background-color:black;
+                color:white;
+                text-align:center;
+                opacity:0.8;
+                padding:10px;
+                display:none;
+                height:auto;
+            }
+	</style>
+</head>
+<body class="claro">
+    <span data-dojo-type="ImageCaptionator" data-dojo-props="image:'anushka.jpg', imageHeight:'500px', imageWidth:'350px', caption:'Hello World', captionPosition:'top'"></span>
+	<script>dojoConfig = {parseOnLoad: false}</script>
+	<script src='http://dojotoolkit.org/reference-guide/1.7/_static/js/dojo/dojo.js'></script>
+	<script src='widget.js'></script>
+</body>
+</html>
