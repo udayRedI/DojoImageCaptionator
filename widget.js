@@ -1,28 +1,4 @@
-<!DOCTYPE html>
-<html >
-<head>
-	<link rel="stylesheet" href="claro.css">
-	<style type="text/css">
-            .imageCaptionator {
-                position:relative;
-                display:block;
-                overflow:hidden;
-            }
-            .caption{
-                position:absolute;
-                width:100%;
-                background-color:black;
-                color:white;
-                text-align:center;
-                opacity:0.8;
-                padding:10px;
-                display:none;
-            }
-	</style>
-	<script>dojoConfig = {parseOnLoad: false}</script>
-	<script src='http://dojotoolkit.org/reference-guide/1.7/_static/js/dojo/dojo.js'></script>
-	
-	<script>
+
             require([
                 "dojo/_base/declare", "dojo/parser", "dojo/ready", "dojo/on", "dojo/mouse", "dojo/dom-style",
                 "dijit/_WidgetBase", "dijit/_TemplatedMixin"
@@ -76,9 +52,3 @@
                     parser.parse();
                 });
             });
-	</script>
-</head>
-<body class="claro">
-    <span data-dojo-type="BusinessCard" data-dojo-props="image:'anushka.jpg', height:'450px', width:'350px', caption:'Hi and Hello', captionPosition:'top'"></span>
-</body>
-</html>
