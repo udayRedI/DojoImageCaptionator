@@ -1,50 +1,98 @@
 require([
-    "dojo/_base/declare", "dojo/dom-construct", "dojo/parser", "dojo/dom-style", "dojo/ready",
-    "dijit/_WidgetBase",
-], function(declare, domConstruct, parser, domStyle, ready, _WidgetBase){
-    declare("imageCaptionator", [_WidgetBase], {
-        // counter
-        _i: 0,
+    "dojo/_base/declare", "dojo/parser", "dojo/ready", "dojo/on", "dojo/mouse", "dojo/dom-style",
+    "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dojo/_base/lang"
+], function(declare, parser, ready, on, mouse, style, _WidgetBase, _TemplatedMixin, lang){
 
-        buildRendering: function(){
-            // create the DOM for this widget
-            imageURL = this.srcNodeRef.getAttribute('src');
-            height = this.srcNodeRef.getAttribute('height');
-            width = this.srcNodeRef.getAttribute('width');
-            position = this.srcNodeRef.getAttribute('caption-position');
+    declare("ImageCaptionator", [_WidgetBase, _TemplatedMixin], {
+        templateString:
+            "<div class='imageCaptionator'>" +
+                "<div class='caption' data-dojo-attach-point='captionNode'></div>" +
+                "<img data-dojo-attach-point='imageNode'></img>" +
+            "</div>",
 
-            if(position == "top" || position == "Top"){
-                captionHeight = "0px";
-            } else if(position == "bottom" || position == "Bottom") {
-                captionHeight = parseInt(height)-20+"px";
-            }
+        caption: "unknown",
+        _setCaptionAttr: { node: "captionNode", type: "innerHTML" },
 
-            this.domNode = domConstruct.create("div", {innerHTML:'<img src="'+imageURL+'"  height="'+height+'" width="'+width+'"/><div style="top:'+captionHeight+'" class="caption">Hello</div>' });
-            domStyle.set(this.domNode, "max-width", width);
-            domStyle.set(this.domNode, "position", "relative");
+        image: null,
+        _setImageAttr: {node: "imageNode", type: "attribute", attribute: "src" },
+
+        imageHeight: "100px",
+        _setImageHeightAttr: function(height){
+            style.set(this.imageNode, "height", height);
+            style.set(this.domNode, "height", height);
+        },
+
+        imageWidth: "50px",
+        _setImageWidthAttr: function(width){
+            style.set(this.captionNode, "width", width);
+            style.set(this.imageNode, "width", width);
+            style.set(this.domNode, "width", width);
+        },
+
+        captionPosition: "bottom",
+        _setCaptionPositionAttr: function(position){
+            this.captionPosition = position;
         },
 
         postCreate: function(){
-            // every time the user clicks the button, increment the counter
-            this.connect(this.domNode, "onmouseover", "captionVisible");
-            this.connect(this.domNode, "onmouseout", "captionInvisible");
+            style.set(this.captionNode, "display", "block");
+            if(this.captionPosition == "top" || this.captionPosition == "Top" || this.captionPosition == "TOP"){
+                var captionHeight = style.get(this.captionNode, "height");
+                var padding = style.get(this.captionNode, "padding");
+                var imageHeight = style.get(this.imageNode, "height")
+                var topValue = imageHeight - captionHeight - (2 * padding);
+                style.set(this.captionNode, "top", "-"+topValue+"px");
+            } else if(this.captionPosition == "bottom" || this.captionPosition == "Bottom" || this.captionPosition == "BOTTOM"){
+                var imageHeight = style.get(this.imageNode, "height")
+                style.set(this.captionNode, "top", imageHeight+"px");
+            }
+
+            on(this.imageNode, mouse.enter, lang.hitch(this,"_mouseEnter"));
+            on(this.imageNode, mouse.leave, lang.hitch(this,"_mouseLeave"));
         },
 
-        captionInvisible: function(){
-           var captionNode = this.domNode.childNodes[1];
-           domStyle.set(captionNode, "display", 'none');
+        _mouseEnter: function(){
+            if(this.captionPosition == "top" || this.captionPosition == "Top" || this.captionPosition == "TOP"){
+                this._topPositionSlideDown();
+            } else if(this.captionPosition == "bottom" || this.captionPosition == "Bottom" || this.captionPosition == "BOTTOM"){
+                this._bottomPositionSlideUp();
+            }
+        },
+        
+        _mouseLeave: function(){
+            if(this.captionPosition == "top" || this.captionPosition == "Top" || this.captionPosition == "TOP"){
+                this._topPositionSlideUp();
+            } else if(this.captionPosition == "bottom" || this.captionPosition == "Bottom" || this.captionPosition == "BOTTOM"){
+                this._bottomPositionSlideDown();
+            }
         },
 
-        captionVisible: function(){
-            //this.domNode.innerHTML = ++this._i;
-           var captionNode = this.domNode.childNodes[1];
-           domStyle.set(captionNode, "display", 'block');
+        _topPositionSlideUp: function(){
+             var captionHeight = style.get(this.captionNode, "height");
+             var padding = style.get(this.captionNode, "padding");
+             var imageHeight = style.get(this.imageNode, "height")
+             var topValue = imageHeight - captionHeight - (2 * padding);
+             style.set(this.captionNode, "top", "-"+topValue+"px");
+        },
+
+        _topPositionSlideDown: function(){
+            style.set(this.captionNode, "top", "0px");
+        },
+
+        _bottomPositionSlideUp: function(){
+            var captionHeight = style.get(this.captionNode, "height");
+            var padding = style.get(this.captionNode, "padding");
+            var imageHeight = style.get(this.imageNode, "height");
+            var topValue = imageHeight - captionHeight - (2 * padding);
+            style.set(this.captionNode, "top", topValue+"px");
+        },
+
+        _bottomPositionSlideDown: function(){
+            var imageHeight = style.get(this.imageNode, "height");
+            style.set(this.captionNode, "top", imageHeight+"px");
         }
     });
-
     ready(function(){
-        // Call the parser manually so it runs after our widget is defined, and page has finished loading
         parser.parse();
     });
 });
-
